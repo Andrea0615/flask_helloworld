@@ -38,7 +38,7 @@ def sensor():
         cursor = connection.cursor() #cursor al objeto que se encarga de leer los datos (tablas, sqls etc)
         
         # Example query
-        cursor.execute("SELECT NOW();") #select: es la sql que se quiere ejecutar
+        cursor.execute("select * from sensores;") #select: es la sql que se quiere ejecutar
         result = cursor.fetchone()
         print("Current Time:", result)
     
