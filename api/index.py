@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify, render_template
 import psycopg2 #conectarse a posgres ccon sql en pyhton
 from dotenv import load_dotenv# leer las variables de ambiente
 import os #leer las variables de ambiente
