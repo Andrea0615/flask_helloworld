@@ -6,11 +6,13 @@ import os #leer las variables de ambiente
 load_dotenv()
 
 # Fetch variables
-USER = os.getenv("user")
+CONNECTION_STRING= os.getenv("CONNECTION_STRING")
+
+"""USER = os.getenv("user")
 PASSWORD = os.getenv("password")
 HOST = os.getenv("host")
 PORT = os.getenv("port")
-DBNAME = os.getenv("dbname")
+DBNAME = os.getenv("dbname")"""
 
 
 app = Flask(__name__)
@@ -28,11 +30,7 @@ def sensor():
     # Connect to the database
     try:
         connection = psycopg2.connect( #se conecta a la base de datos
-            user=USER,
-            password=PASSWORD,
-            host=HOST,
-            port=PORT,
-            dbname=DBNAME
+            CONNECTION_STRING
         )
         print("Connection successful!")
         
