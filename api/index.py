@@ -21,13 +21,39 @@ app = Flask(__name__)
 def home():
     return 'Hello, World!'
 
-
-@app.route('')
-
 @app.route('/about')
 def about():
     return 'About'
     
+@app.route('/sensor')
+def sensor():
+    # Connect to the database
+    try:
+        connection = psycopg2.connect( #se conecta a la base de datos
+            CONNECTION_STRING
+        )
+        print("Connection successful!")
+        
+        # Create a cursor to execute SQL queries
+        cursor = connection.cursor() #cursor al objeto que se encarga de leer los datos (tablas, sqls etc)
+        
+        # Example query
+        cursor.execute("select * from sensores;") #select: es la sql que se quiere ejecutar
+        result = cursor.fetchone()
+        print("Current Time:", result)
+    
+        # Close the cursor and connection
+        cursor.close()
+        connection.close()
+        print("Connection closed.")
+        return f"Current Time:, {result}"
+    
+    except Exception as e:
+        return f"Failed to connect: {e}"
+
+
+
+
 @app.route("/sensor/<int:sensor_id>", methods=["POST"])
 def insert_sensor_value(sensor_id):
     value = request.args.get("value", type=float)
@@ -38,7 +64,6 @@ def insert_sensor_value(sensor_id):
         conn = psycopg2.connect( #se conecta a la base de datos
             CONNECTION_STRING
         )
-        print("Connection successful!")
         cur = conn.cursor()
 
         # Insert into sensors table
@@ -60,6 +85,3 @@ def insert_sensor_value(sensor_id):
     finally:
         if 'conn' in locals():
             conn.close()
-    
-    except Exception as e:
-        return f"Failed to connect: {e}"
