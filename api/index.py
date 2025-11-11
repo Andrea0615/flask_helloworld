@@ -28,13 +28,15 @@ def about():
 @app.route("/sensor/<int:sensor_id>")
 def get_sensor(sensor_id):
     try:
-        conn = get_connection()
+        conn = psycopg2.connect( #se conecta a la base de datos
+            CONNECTION_STRING
+        )
         cur = conn.cursor()
 
         # Get the latest 10 values
         cur.execute("""
             SELECT value, created_at
-            FROM sensors
+            FROM sensores
             WHERE sensor_id = %s
             ORDER BY created_at DESC
             LIMIT 10;
