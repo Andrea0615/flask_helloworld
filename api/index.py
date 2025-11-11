@@ -85,3 +85,8 @@ def insert_sensor_value(sensor_id):
     finally:
         if 'conn' in locals():
             conn.close()
+
+@app.route("/pagina")
+def pagina():
+    #recibe como parametro cual es la pagina que queremos hacer
+    return render_template("pagina.html")
