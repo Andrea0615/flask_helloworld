@@ -89,4 +89,4 @@ def insert_sensor_value(sensor_id):
 @app.route("/pagina")
 def pagina():
     #recibe como parametro cual es la pagina que queremos hacer
-    return render_template("pagina.html")
+    return render_template("pagina.html",user="Miguel") #poner las variables (user que cree en la pagina) #esos datos los ire sacando de una base de datos
