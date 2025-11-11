@@ -35,10 +35,10 @@ def get_sensor(sensor_id):
 
         # Get the latest 10 values
         cur.execute("""
-            SELECT value, created_at
+            SELECT value, create_at
             FROM sensores
             WHERE sensor_id = %s
-            ORDER BY created_at DESC
+            ORDER BY create_at DESC
             LIMIT 10;
         """, (sensor_id,))
         rows = cur.fetchall()
