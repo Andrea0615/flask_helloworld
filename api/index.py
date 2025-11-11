@@ -25,31 +25,34 @@ def home():
 def about():
     return 'About'
     
-@app.route('/sensor')
-def sensor():
-    # Connect to the database
+@app.route("/sensor/<int:sensor_id>")
+def get_sensor(sensor_id):
     try:
-        connection = psycopg2.connect( #se conecta a la base de datos
-            CONNECTION_STRING
-        )
-        print("Connection successful!")
+        conn = get_connection()
+        cur = conn.cursor()
+
+        # Get the latest 10 values
+        cur.execute("""
+            SELECT value, created_at
+            FROM sensors
+            WHERE sensor_id = %s
+            ORDER BY created_at DESC
+            LIMIT 10;
+        """, (sensor_id,))
+        rows = cur.fetchall()
+
+        # Convert to lists for graph
+        values = [r[0] for r in rows][::-1]        # reverse for chronological order
+        timestamps = [r[1].strftime('%Y-%m-%d %H:%M:%S') for r in rows][::-1]
         
-        # Create a cursor to execute SQL queries
-        cursor = connection.cursor() #cursor al objeto que se encarga de leer los datos (tablas, sqls etc)
-        
-        # Example query
-        cursor.execute("select * from sensores;") #select: es la sql que se quiere ejecutar
-        result = cursor.fetchone()
-        print("Current Time:", result)
-    
-        # Close the cursor and connection
-        cursor.close()
-        connection.close()
-        print("Connection closed.")
-        return f"Current Time:, {result}"
-    
+        return render_template("sensor.html", sensor_id=sensor_id, values=values, timestamps=timestamps, rows=rows)
+
     except Exception as e:
-        return f"Failed to connect: {e}"
+        return f"<h3>Error: {e}</h3>"
+
+    finally:
+        if 'conn' in locals():
+            conn.close()
 
 
 
@@ -90,3 +93,6 @@ def insert_sensor_value(sensor_id):
 def pagina():
     #recibe como parametro cual es la pagina que queremos hacer
     return render_template("pagina.html",user="Miguel") #poner las variables (user que cree en la pagina) #esos datos los ire sacando de una base de datos
+
+
+
